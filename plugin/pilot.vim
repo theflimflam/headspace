@@ -5,19 +5,27 @@ ruby << EOF
   require 'timeout'
   require 'socket'
 
+  # VERSION_MAJOR VERSION_MINOR VERSION_BUILD VERSION_PATCHLEVEL VERSION_SHORT
+  # VERSION_MEDIUM VERSION_LONG VERSION_LONG_DATE DeletedBufferError DeletedWindowError Buffer Window
+
   module Headspace
     class Supervisor
       def initialize
-        puts "zomg"
         @server = TCPServer.new(8080)
       end
 
       def call
         client = @server.accept
-        client.puts "Hai"
-        client.puts "timezzzzz #{Time.now}"
+        client.puts "The time is totally #{Time.now}"
+        client.puts "========================================"
+        client.puts Buffer.new.call
+        client.puts "========================================"
+        puts client.gets
         client.close
       end
+    end
+
+    class Sender
     end
 
     class Buffer
@@ -26,14 +34,26 @@ ruby << EOF
       end
 
       def call
-        lines = (1..3).map { |i| @buffer[i] }
-        puts lines.join(' ')
+        buffer_contents.join(' ')
+      end
+
+      private
+
+      def buffer_contents
+        buffer_lines.map { |i| @buffer[i] }
+      end
+
+      def buffer_lines
+        1..last_line_number
+      end
+
+      def last_line_number
+        @buffer.length
       end
     end
   end
 
-  # @instance ||= Headspace::Supervisor.new
-  @instance = Headspace::Supervisor.new
+  @instance ||= Headspace::Supervisor.new
   @instance.call
 EOF
 endfunction
