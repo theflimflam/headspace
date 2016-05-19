@@ -3,15 +3,15 @@ ruby << EOF
   class Garnet
     def initialize(s)
       @buffer = Vim::Buffer.current
-      vimputs(s)
     end
 
-    def vimputs(s)
-      @buffer.append(@buffer.count, s)
+    def call
+      @buffer.delete(2)
+      @buffer.append(2, "The stuff")
     end
   end
 
-  gem = Garnet.new("hi alice")
+  gem = Garnet.new("hi alice").call
 EOF
 endfunction
 
