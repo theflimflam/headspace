@@ -1,18 +1,41 @@
-function! Headspace()
+function! s:run()
 ruby << EOF
-  class Garnet
-    def initialize(s)
-      @buffer = Vim::Buffer.current
+  require 'thread'
+  require 'fileutils'
+  require 'timeout'
+  require 'socket'
+
+  module Headspace
+    class Supervisor
+      def initialize
+        puts "zomg"
+        @server = TCPServer.new(8080)
+      end
+
+      def call
+        client = @server.accept
+        client.puts "Hai"
+        client.puts "timezzzzz #{Time.now}"
+        client.close
+      end
     end
 
-    def call
-      @buffer.delete(2)
-      @buffer.append(2, "The stuff")
+    class Buffer
+      def initialize
+        @buffer = Vim::Buffer.current
+      end
+
+      def call
+        lines = (1..3).map { |i| @buffer[i] }
+        puts lines.join(' ')
+      end
     end
   end
 
-  gem = Garnet.new("hi alice").call
+  # @instance ||= Headspace::Supervisor.new
+  @instance = Headspace::Supervisor.new
+  @instance.call
 EOF
 endfunction
 
-com! Headspace cal Headspace()
+command! Headspace call s:run()
