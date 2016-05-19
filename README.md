@@ -21,3 +21,6 @@ Bundle 'theflimflam/headspace'
 
 [Pathogen](https://github.com/tpope/vim-pathogen): TODO
 
+## How to
+
+Hack hack, still WIP
