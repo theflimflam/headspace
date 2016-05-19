@@ -16,8 +16,9 @@ endfunction
 command! EchoHeadspaceCoPilot call s:echo()
 
 function! s:setup()
-  call system("if [ ! -e in ]; then mkfifo in; fi")
-  call system("while [ 1 ]; do nc -l localhost 8080 < in > /dev/null; done &")
+  call system("if [ ! -e /tmp/in ]; then mkfifo /tmp/in; fi")
+  call system("if [ ! -e /tmp/out ]; then mkfifo /tmp/out; fi")
+  call system("nc -lk localhost 8080 < /tmp/in > /tmp/out &")
   autocmd CursorMoved * EchoHeadspaceCoPilot
   autocmd CursorMovedI * EchoHeadspaceCoPilot
 endfunction
