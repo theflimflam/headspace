@@ -21,8 +21,16 @@ ruby << EOF
         client.puts "========================================"
         client.puts Buffer.new.call
         client.puts "========================================"
-        puts client.gets
+        buffer = Vim::Buffer.current
+        delete_buffer
+        buffer.append(0, client.gets.chomp)
         client.close
+      end
+
+      private
+
+      def delete_buffer
+        VIM.command(":g/.*/d")
       end
     end
 
