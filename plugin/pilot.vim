@@ -23,7 +23,7 @@ ruby << EOF
         client.puts "========================================"
         buffer = Vim::Buffer.current
         delete_buffer
-        buffer.append(0, client.gets.chomp)
+        decode(client.gets.chomp).reverse.each { |line| buffer.append(0, line) }
         client.close
       end
 
@@ -31,6 +31,10 @@ ruby << EOF
 
       def delete_buffer
         VIM.command(":g/.*/d")
+      end
+
+      def decode(input)
+        input.split(' ').map { |line| Base64.strict_decode64(line) }
       end
     end
 
