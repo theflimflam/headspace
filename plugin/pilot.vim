@@ -4,6 +4,7 @@ ruby << EOF
   require 'fileutils'
   require 'timeout'
   require 'socket'
+  require 'base64'
 
   # VERSION_MAJOR VERSION_MINOR VERSION_BUILD VERSION_PATCHLEVEL VERSION_SHORT
   # VERSION_MEDIUM VERSION_LONG VERSION_LONG_DATE DeletedBufferError DeletedWindowError Buffer Window
@@ -34,7 +35,7 @@ ruby << EOF
       end
 
       def call
-        buffer_contents.join(' ')
+        buffer_contents.map { |line| encode(line) }.join(' ')
       end
 
       private
@@ -49,6 +50,10 @@ ruby << EOF
 
       def last_line_number
         @buffer.length
+      end
+
+      def encode(line)
+        Base64.strict_encode64(line).gsub('\n', '')
       end
     end
   end
